@@ -7,12 +7,13 @@ import (
 )
 
 func main() {
-	fmt.Println("hello world")
-
-	info := avatar.Info{Email: "atilioboher@gmail.com"}
-	fmt.Println(info)
+	info := avatar.Info{Email: "someEmail@gmail.com",
+		Ip: "127.0.0.1"}
 
 	a := avatar.GimmeAnAvatarGenerator()
-	fmt.Println(a)
+	err := a.GenerateAndSaveAvatar(info)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 }

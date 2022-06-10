@@ -1,6 +1,8 @@
 package avatar
 
 import (
+	"fmt"
+
 	"github.com/AtilioBoher/integrador-avater-me/avatar/encoder"
 	"github.com/AtilioBoher/integrador-avater-me/avatar/images"
 )
@@ -21,9 +23,11 @@ type avatarGenerator struct {
 	Generator imageGenInter
 }
 
-// Information contains information
+// Info can contain either an email or an IP or both,
+// but it can't be left empty or an error will occur when used
 type Info struct {
 	Email string
+	Ip    string
 }
 
 func GimmeAnAvatarGenerator() *avatarGenerator {
@@ -34,15 +38,38 @@ func GimmeAnAvatarGenerator() *avatarGenerator {
 	return &a
 }
 
+func (i *Info) isInfoEmpty() error {
+	empty := Info{}
+	if *i == empty {
+		return fmt.Errorf("error: the Info struct supplied is empty, please insert and email or an ip address")
+	}
+	return nil
+}
+
 func (a *avatarGenerator) GenerateAndSaveAvatar(info Info) error {
 	// here will be all the logic
-	hash, err := a.Encoder.EncodeInfo(info.Email)
+
+	if err := info.isInfoEmpty(); err != nil {
+		return err
+	}
+
+	// if in case both are supplied, email will be used
+	inputInfo := info.Ip
+	if info.Email != "" {
+		inputInfo = info.Email
+	}
+
+	hash, err := a.Encoder.EncodeInfo(inputInfo)
 	if err != nil {
 		return err
 	}
-	err = a.Generator.BuildAndSaveImage(hash)
+
+	fmt.Println(hash)
+
+	/* err = a.Generator.BuildAndSaveImage(hash)
 	if err != nil {
 		return err
-	}
+	} */
+
 	return nil
 }
