@@ -1,27 +1,48 @@
 package avatar
 
-// cryptoEncoder is someone who can encode information.
-type cryptoEncoder interface {
-	EncodeInformation(strInformation string) (encodedInformation []byte, err error)
+import (
+	"github.com/AtilioBoher/integrador-avater-me/avatar/encoder"
+	"github.com/AtilioBoher/integrador-avater-me/avatar/images"
+)
+
+// encoderInter is someone who can encode information.
+type encoderInter interface {
+	EncodeInfo(strInfo string) (encodedInfo []byte, err error)
 }
 
-// imageGenerator is someone who can make images.
-type imageGenerator interface {
-	BuildAndSaveImage(encodedInformation []byte) error
+// imageInter is someone who can make images.
+type imageGenInter interface {
+	BuildAndSaveImage(encodedInfo []byte) error
 }
 
 // Service contains functionalities related to avatar generation.
-type Service struct {
-	encoder   cryptoEncoder
-	generator imageGenerator
+type avatarGenerator struct {
+	Encoder   encoderInter
+	Generator imageGenInter
 }
 
-// Information contains information (?)
-type Information struct {
-	// here goes all the information you want to encode
+// Information contains information
+type Info struct {
+	Email string
 }
 
-func (s *Service) GenerateAndSaveAvatar(information Information) error {
+func GimmeAnAvatarGenerator() *avatarGenerator {
+	a := avatarGenerator{
+		Encoder:   encoder.GimmeAnEncoder(),
+		Generator: images.GimmeAnImageGenerator(),
+	}
+	return &a
+}
+
+func (a *avatarGenerator) GenerateAndSaveAvatar(info Info) error {
 	// here will be all the logic
+	hash, err := a.Encoder.EncodeInfo(info.Email)
+	if err != nil {
+		return err
+	}
+	err = a.Generator.BuildAndSaveImage(hash)
+	if err != nil {
+		return err
+	}
 	return nil
 }
