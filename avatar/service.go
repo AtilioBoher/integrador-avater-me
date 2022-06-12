@@ -64,12 +64,10 @@ func (a *avatarGenerator) GenerateAndSaveAvatar(info Info) error {
 		return err
 	}
 
-	fmt.Println(hash)
-
-	/* err = a.Generator.BuildAndSaveImage(hash)
+	err = a.Generator.BuildAndSaveImage(hash)
 	if err != nil {
 		return err
-	} */
+	}
 
 	return nil
 }
