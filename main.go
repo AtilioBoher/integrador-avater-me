@@ -7,8 +7,10 @@ import (
 )
 
 func main() {
-	info := avatar.Info{Email: "Samantha",
-		Ip: "127.0.0.1"}
+	info := avatar.Info{
+		StrInf:   "atilio",
+		FilePath: "identicon.png",
+	}
 
 	a := avatar.GimmeAnAvatarGenerator()
 	err := a.GenerateAndSaveAvatar(info)

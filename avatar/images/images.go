@@ -94,9 +94,10 @@ func (ic *icon) makeGrid(hash []byte) {
 	}
 }
 
-func (ic *icon) BuildAndSaveImage(encodedInfo []byte) error {
+// take into account that this implementation works only with a hash of [20]byte
+func (ic *icon) BuildAndSaveImage(encodedInfo []byte, filePath string) error {
 	ic.makeGrid(encodedInfo)
 	ic.generateImage()
-	ic.saveImage("random.png")
+	ic.saveImage(filePath)
 	return nil
 }

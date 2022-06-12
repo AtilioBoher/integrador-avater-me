@@ -14,7 +14,7 @@ type encoderInter interface {
 
 // imageInter is someone who can make images.
 type imageGenInter interface {
-	BuildAndSaveImage(encodedInfo []byte) error
+	BuildAndSaveImage(encodedInfo []byte, filePath string) error
 }
 
 // Service contains functionalities related to avatar generation.
@@ -26,8 +26,8 @@ type avatarGenerator struct {
 // Info can contain either an email or an IP or both,
 // but it can't be left empty or an error will occur when used
 type Info struct {
-	Email string
-	Ip    string
+	StrInf string
+	FilePath string
 }
 
 func GimmeAnAvatarGenerator() *avatarGenerator {
@@ -53,18 +53,12 @@ func (a *avatarGenerator) GenerateAndSaveAvatar(info Info) error {
 		return err
 	}
 
-	// if in case both are supplied, email will be used
-	inputInfo := info.Ip
-	if info.Email != "" {
-		inputInfo = info.Email
-	}
-
-	hash, err := a.Encoder.EncodeInfo(inputInfo)
+	hash, err := a.Encoder.EncodeInfo(info.StrInf)
 	if err != nil {
 		return err
 	}
 
-	err = a.Generator.BuildAndSaveImage(hash)
+	err = a.Generator.BuildAndSaveImage(hash, info.FilePath)
 	if err != nil {
 		return err
 	}
