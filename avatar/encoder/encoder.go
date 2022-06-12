@@ -8,12 +8,14 @@ import (
 type encoder struct {
 }
 
-// returns an encoder
+// Returns a pointer to an encoder which implements the encoderInter interface
 func GimmeAnEncoder() *encoder {
 	e := encoder{}
 	return &e
 }
 
+// Returns the hash of the input string and an error.
+// The hash is made with the sha1 algorithm, which returns a 20 bytes long hash
 func (e *encoder) EncodeInfo(strInfo string) (encodedInfo []byte, err error) {
 	// in case the input is empy the function will return an empty byte slice and an error
 	if strInfo == "" {

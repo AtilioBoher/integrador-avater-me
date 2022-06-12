@@ -12,7 +12,7 @@ type encoderInter interface {
 	EncodeInfo(strInfo string) (encodedInfo []byte, err error)
 }
 
-// imageInter is someone who can make images.
+// imageGenInter is someone who can make the identicons.
 type imageGenInter interface {
 	BuildAndSaveImage(encodedInfo []byte, filePath string) error
 }
@@ -23,13 +23,15 @@ type avatarGenerator struct {
 	Generator imageGenInter
 }
 
-// Info can contain either an email or an IP or both,
-// but it can't be left empty or an error will occur when used
+// Info can contain the information related to the generation of an avatar.
+// StrInfo contains the string that is going to be hashed to ganerate the avatar,
+// and FilePath is the path where the avatar will be stored (the image format must be .png)
 type Info struct {
-	StrInf string
+	StrInfo  string
 	FilePath string
 }
 
+// Returns the pointer to an avatar generator
 func GimmeAnAvatarGenerator() *avatarGenerator {
 	a := avatarGenerator{
 		Encoder:   encoder.GimmeAnEncoder(),
@@ -38,22 +40,22 @@ func GimmeAnAvatarGenerator() *avatarGenerator {
 	return &a
 }
 
+// Check if the info struct is empty and returns an error if that is the case
 func (i *Info) isInfoEmpty() error {
 	empty := Info{}
 	if *i == empty {
-		return fmt.Errorf("error: the Info struct supplied is empty, please insert and email or an ip address")
+		return fmt.Errorf("error: the Info struct supplied is empty, please insert information before attempting to generate an avatar")
 	}
 	return nil
 }
 
+// Generates and store an avatar, needs a filled Info struct
 func (a *avatarGenerator) GenerateAndSaveAvatar(info Info) error {
-	// here will be all the logic
-
 	if err := info.isInfoEmpty(); err != nil {
 		return err
 	}
 
-	hash, err := a.Encoder.EncodeInfo(info.StrInf)
+	hash, err := a.Encoder.EncodeInfo(info.StrInfo)
 	if err != nil {
 		return err
 	}

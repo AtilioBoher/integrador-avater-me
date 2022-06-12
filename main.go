@@ -8,7 +8,7 @@ import (
 
 func main() {
 	info := avatar.Info{
-		StrInf:   "atilio",
+		StrInfo:  "atilio",
 		FilePath: "identicon.png",
 	}
 
