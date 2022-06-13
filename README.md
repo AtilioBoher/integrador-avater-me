@@ -5,33 +5,28 @@ El mismo es un módulo que genera un identicon único para cada usuario en base 
 
 # Explicación de su uso
 
-Para su uso debe crearse una estructura tipo Info, la cual contendrá la información de la cual se obtendrá un hash y la dirección donde se guardará la imagen generada.
+Para su uso debe crearse una estructura tipo Info, la cual contendrá la información de la cual se obtendrá un hash y la dirección donde se guardará la imagen generada. A continuación se encuentra un ejemplo.
 
-A continuación se presenta un ejemplo.
------
 ```go
 package main
+
 import (
-        "log"
-        "github.com/tarm/serial"
+	"fmt"
+
+	"github.com/AtilioBoher/integrador-avater-me/avatar"
 )
+
 func main() {
-        c := &serial.Config{Name: "COM45", Baud: 115200}
-        s, err := serial.OpenPort(c)
-        if err != nil {
-                log.Fatal(err)
-        }
-        
-        n, err := s.Write([]byte("test"))
-        if err != nil {
-                log.Fatal(err)
-        }
-        
-        buf := make([]byte, 128)
-        n, err = s.Read(buf)
-        if err != nil {
-                log.Fatal(err)
-        }
-        log.Printf("%q", buf[:n])
+	info := avatar.Info{
+		StrInfo:  "atilio",
+		FilePath: "identicon.png",
+	}
+
+	a := avatar.GimmeAnAvatarGenerator()
+	err := a.GenerateAndSaveAvatar(info)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 }
 ```
