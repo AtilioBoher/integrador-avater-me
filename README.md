@@ -7,18 +7,31 @@ El mismo es un módulo que genera un identicon único para cada usuario en base 
 
 Para su uso debe crearse una estructura tipo Info, la cual contendrá la información de la cual se obtendrá un hash y la dirección donde se guardará la imagen generada.
 
-info := avatar.Info{
-		StrInfo:  "atilio",
-		FilePath: "identicon.png",
-	}
-
-Luego debe crearese un generador de avatar
-
-a := avatar.GimmeAnAvatarGenerator()
-
-Este generador de avatar genera la imagen en base a la información guardada en la estructura info
-
-err := a.GenerateAndSaveAvatar(info)
-	if err != nil {
-		fmt.Println(err)
-	}
+A continuación se presenta un ejemplo.
+-----
+```go
+package main
+import (
+        "log"
+        "github.com/tarm/serial"
+)
+func main() {
+        c := &serial.Config{Name: "COM45", Baud: 115200}
+        s, err := serial.OpenPort(c)
+        if err != nil {
+                log.Fatal(err)
+        }
+        
+        n, err := s.Write([]byte("test"))
+        if err != nil {
+                log.Fatal(err)
+        }
+        
+        buf := make([]byte, 128)
+        n, err = s.Read(buf)
+        if err != nil {
+                log.Fatal(err)
+        }
+        log.Printf("%q", buf[:n])
+}
+```
