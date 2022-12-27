@@ -1,3 +1,8 @@
+/*
+Package avatar is capable of generating a user icon from a string with information from the user.
+The information is hashed before is used to generate the icon, so that sensible information can
+be used without security issues.
+*/
 package avatar
 
 import (
@@ -7,51 +12,51 @@ import (
 	"github.com/AtilioBoher/integrador-avater-me/avatar/images"
 )
 
-// encoderInter is someone who can encode information.
-type encoderInter interface {
+// infoEncoder is someone who can encode information.
+type infoEncoder interface {
 	EncodeInfo(strInfo string) (encodedInfo []byte, err error)
 }
 
-// imageGenInter is someone who can make the identicons.
-type imageGenInter interface {
+// imageGen is someone who can make identicons.
+type imageGen interface {
 	BuildAndSaveImage(encodedInfo []byte, filePath string) error
 }
 
-// Service contains functionalities related to avatar generation.
+// avatarGenerator contains functionalities related to avatar generation.
 type avatarGenerator struct {
-	Encoder   encoderInter
-	Generator imageGenInter
+	Encoder   infoEncoder
+	Generator imageGen
 }
 
-// Info can contain the information related to the generation of an avatar.
+// Info contains the information related to the generation of an avatar.
 // StrInfo contains the string that is going to be hashed to ganerate the avatar,
-// and FilePath is the path where the avatar will be stored (the image format must be .png)
+// and FilePath is the path where the avatar will be stored (the image format must be .png).
 type Info struct {
 	StrInfo  string
 	FilePath string
 }
 
-// Returns the pointer to an avatar generator
+// GimmeAnAvatarGenerator returns the pointer to an avatarGenerator.
 func GimmeAnAvatarGenerator() *avatarGenerator {
-	a := avatarGenerator{
-		Encoder:   encoder.GimmeAnEncoder(),
-		Generator: images.GimmeAnImageGenerator(),
+	return &avatarGenerator{
+		Encoder:   encoder.NewEncoder(),
+		Generator: images.NewImageGenerator(),
 	}
-	return &a
 }
 
-// Check if the info struct is empty and returns an error if that is the case
-func (i *Info) isInfoEmpty() error {
+// isEmpty checks if the info struct is empty and returns an error if that is the case.
+func (i *Info) isEmpty() error {
 	empty := Info{}
 	if *i == empty {
-		return fmt.Errorf("error: the Info struct supplied is empty, please insert information before attempting to generate an avatar")
+		return fmt.Errorf("error: the Info struct supplied is empty, " +
+			"please insert information before attempting to generate an avatar")
 	}
 	return nil
 }
 
-// Generates and store an avatar, needs a filled Info struct
+// GenerateAndSaveAvatar generates and store an avatar, needs a filled Info struct
 func (a *avatarGenerator) GenerateAndSaveAvatar(info Info) error {
-	if err := info.isInfoEmpty(); err != nil {
+	if err := info.isEmpty(); err != nil {
 		return err
 	}
 
