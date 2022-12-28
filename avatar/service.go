@@ -36,7 +36,13 @@ type Info struct {
 	FilePath string
 }
 
-// NewAnAvatarGenerator returns the pointer to an avatarGenerator.
+// GimmieAnAvatarGenerator returns the pointer to an avatarGenerator.
+// Was replaced by NewAvatarGenerator, but is keept here for backwards compatibilities
+func GimmeAnAvatarGenerator() *avatarGenerator {
+	return NewAvatarGenerator()
+}
+
+// NewAvatarGenerator returns the pointer to an avatarGenerator.
 func NewAvatarGenerator() *avatarGenerator {
 	return &avatarGenerator{
 		Encoder:   encoder.NewEncoder(),
