@@ -22,7 +22,7 @@ func main() {
 		FilePath: "identicon.png",
 	}
 
-	a := avatar.GimmeAnAvatarGenerator()
+	a := avatar.NewAvatarGenerator()
 	err := a.GenerateAndSaveAvatar(info)
 	if err != nil {
 		fmt.Println(err)
